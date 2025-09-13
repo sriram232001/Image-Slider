@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Slider</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      background: rgba(0, 0, 0, 0.8);
+      position: fixed;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #00ff66;
+      font-weight: bold;
+      padding: 5px 10px;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #00ff66;
+      border-bottom: 2px solid #00ff66;
+    }
+
+    /* Profit Section */
+.profit {
+  background: #111;
+  color: #fff;
+  padding: 80px 50px;
+}
+
+.profit-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.profit-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.profit-text h2 {
+  font-size: 40px;
+  color: #00ff66;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profit-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #ccc;
+}
+
+.profit-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.profit-text ul h1 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #00ff66;
+}
+
+.profit-text ul h2 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #00ff66;
+}
+
+.profit-text ul h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #00ff66;
+}
+
+.profit-image {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  justify-content: center;
+}
+
+.profit-image img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+
+    /* Slider Container */
+    .slider {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 50px;
+      background: #111;
+    }
+
+    .slider-content {
+      max-width: 500px;
+      z-index: 2;
+    }
+
+    .slider-content h1 {
+      font-size: 60px;
+      color: #00ff66;
+    }
+
+    .slider-content h2 {
+      font-size: 50px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .slider-content p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .slider-content button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    .slider-content .btn1 {
+      background: #fff;
+      color: #000;
+    }
+
+    .slider-content .btn1:hover {
+      background: #00ff66;
+      color: #fff;
+    }
+
+    .slider-content .btn2 {
+      background: transparent;
+      border: 2px solid #00ff66;
+      color: #00ff66;
+    }
+
+    .slider-content .btn2:hover {
+      background: #00ff66;
+      color: #fff;
+    }
+
+    /* Slider Image */
+    .slider img {
+      position: absolute;
+      right: 50px;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+    }
+
+    /* Thumbnail navigation */
+    .thumbnails {
+      position: absolute;
+      bottom: 50px;
+      right: 50px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .thumbnails img {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .thumbnails img:hover {
+      transform: scale(1.1);
+      border: 2px solid #00ff66;
+    }
+
+    /* Navigation arrows */
+    .nav-arrows {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-arrows button {
+      background: #00ff66;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      color: #000;
+      transition: 0.3s;
+    }
+
+    .nav-arrows button:hover {
+      background: #fff;
+      color: #00ff66;
+    }
+
+    /* About Section */
+.about {
+  background: #111;
+  color: #fff;
+  padding: 80px 50px;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.about-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-text h2 {
+  font-size: 40px;
+  text-align: center;
+  color: #00ff66;
+   margin-bottom: 20px;
+}
+
+.about h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #00ff66;
+}
+
+.about-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.about-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #00ff66;
+  color: #000;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.about-btn:hover {
+  background: #fff;
+  color: #00ff66;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+/* Projects Section */
+.projects {
+  background: #000;
+  color: #fff;
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.projects-header h2 {
+  font-size: 40px;
+  text-align: center;
+  color: #00ff66;
+  margin-bottom: 10px;
+}
+
+.projects-header p {
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 50px;
+}
+
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.project-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+  transition: transform 0.3s;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-card img {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  display: block;
+  transition: 0.5s;
+}
+
+.project-card:hover img {
+  opacity: 0.7;
+}
+
+.project-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0,0,0,0.7);
+  transform: translateY(100%);
+  transition: 0.4s;
+}
+
+.project-card:hover .project-info {
+  transform: translateY(0);
+}
+
+.project-info h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #00ff66;
+}
+
+.project-info p {
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* Video Section */
+.video {
+  background: #111;
+  color: #fff;
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.video-header h2 {
+  font-size: 40px;
+  color: #00ff66;
+  margin-bottom: 10px;
+}
+
+.video-header p {
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+}
+
+.video-container iframe {
+  width: 100%;
+  max-width: 800px;
+  height: 450px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+/* Link Section */
+.links {
+  background: #000;
+  color: #fff;
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.links-header h2 {
+  font-size: 40px;
+  color: #00ff66;
+  margin-bottom: 10px;
+}
+
+.links-header p {
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+.links-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.link-btn {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #111;
+  color: #00ff66;
+  border: 2px solid #00ff66;
+  border-radius: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.link-btn:hover {
+  background: #00ff66;
+  color: #000;
+  transform: translateY(-3px);
+}
+
+
+
+/* Contact Section */
+.contact {
+  background: #111;
+  color: #fff;
+  padding: 80px 50px;
+  text-align: center;
+}
+
+.contact-header h2 {
+  font-size: 40px;
+  color: #00ff66;
+  margin-bottom: 10px;
+}
+
+.contact-header p {
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 50px;
+}
+
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+}
+
+.contact-form {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+}
+
+.contact-form button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #00ff66;
+  color: #000;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.contact-form button:hover {
+  background: #fff;
+  color: #00ff66;
+}
+
+.form-message {
+  margin-top: 15px;
+  font-size: 15px;
+  color: #00ff66;
+  display: none; /* hidden by default */
+}
+
+
+.contact-info {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+  text-align: left;
+}
+
+.contact-info h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #00ff66;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.social-links {
+  margin-top: 20px;
+}
+
+.social-links a {
+  display: inline-block;
+  margin-right: 15px;
+  font-size: 22px;
+  color: #00ff66;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #222;
+  padding-top: 15px;
+  font-size: 14px;
+  color: #888;
+}
+
+
+
+
+    @media(max-width: 900px) {
+      .slider {
+        flex-direction: column;
+        padding: 100px 20px 20px;
+      }
+
+      .slider img {
+        position: relative;
+        max-width: 90%;
+        right: 0;
+        margin-top: 20px;
+      }
+
+      .slider-content h1 {
+        font-size: 40px;
+      }
+
+      .slider-content h2 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <h2 style="color:#00ff66;">God of Human</h2>
+     <ul class="flex space-x-6">
+          <li><a href="#profit" class="hover:text-blue-600">Profit</a></li>
+          <li><a href="#about" class="hover:text-blue-600">About</a></li>
+          <li><a href="#projects" class="hover:text-blue-600">Projects</a></li>
+          <li><a href="#video" class="hover:text-blue-600">Video</a></li>
+          <li><a href="#links" class="hover:text-blue-600">links</a></li>
+          <li><a href="#contact" class="hover:text-blue-600">Contact</a></li>
+        </ul>
+  </nav>
+
+    <!-- Profit Section -->
+  <section class="profit" id="profit">
+    <div class="profit-container">
+      <!-- Left: Profit Text -->
+      <div class="profit-text">
+        <h2>Our Growth & Profit</h2>
+        <p>
+          Every project needs clear objectives to provide direction and ensure success. Objectives define the purpose of the
+          project, outline the expected outcomes, and help in measuring the results. For this portfolio project, the objectives
+          focus on creating a responsive, professional, and interactive platform that showcases personal skills and achievements
+          effectively.
+          </p>
+        <ul>
+           <h1>SRIRAM BALASUBRAMANIYAN</h1>
+          <h2>FRESHER FRONTEND DEVELOPER</h2>
+          <h3>Image Slider</h3>
+        </ul>
+      </div>
+
+      <!-- Right: Profit Image -->
+      <div class="profit-image">
+        <img src="sriram size 2m.jpeg" alt="Profit Image">
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Slider -->
+  <section class="slider">
+    <div class="slider-content">
+      <h1>All</h1>
+      <h2>God of Human</h2>
+      <p>There isn't a single "god of hum" in a literal sense, but in Hindu tradition, the sacred sound Om (or Aum) is the
+      primordial sound of the universe and is considered a representation of Brahman, the ultimate reality. </p> 
+    <br>
+      <p>  The vibration of this sound is sometimes referred to as a divine principle or the origin of all creation </p>
+    <br>
+      <p>The chanting of Om produces the sound often associated with the humming of the universe and is considered the source of everything. </p>
+      <button class="btn1">See More</button>
+      <button class="btn2">Subscribe</button>
+    </div>
+
+    <img id="mainImage" src="sivan.jfif" alt="Shivan">
+
+    
+    
+
+    <!-- Thumbnails -->
+    <div class="thumbnails">
+      <img src="sivan.jfif" onclick="changeImage(this.src)">
+      <img src="rama.jfif" onclick="changeImage(this.src)">
+      <img src="murugan.jfif" onclick="changeImage(this.src)">
+      <img src="krishna.jfif" onclick="changeImage(this.src)">
+      <img src="Hanuman, HARISH MOGER.jfif" onclick="changeImage(this.src)">
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+      <button onclick="prevImage()">&#10094;</button>
+      <button onclick="nextImage()">&#10095;</button>
+    </div>
+  </section>
+
+    <!-- About Section -->
+  <section class="about" id="about">
+    <div class="about-container">
+      <div class="about-text">
+        <h2>About Us</h2>
+        <h3>Shivan</h3>
+        <p>
+        The concept of Lord Shiva being "ready" typically refers to his eternal presence and constant availability to his
+        devotees. He is a compassionate and loving deity, always ready to help the needy and embrace them regardless of their
+        past actions.
+        </p>
+        <p>
+        This readiness can also be understood as the state of spiritual readiness within a devotee to receive his grace through
+        compassion, forgiveness, and surrender to Him
+        </p>
+        <button class="about-btn">Learn More</button>
+      </div>
+      <div class="about-image">
+        <img src="sivan.jfif" alt="Shivan">
+      </div>
+    </div>
+    <br>
+  <hr>
+  <h3>Shri Rama</h3>
+    <div class="about-container">
+      <div class="about-text">
+        <p>
+          "Vinayaka" refers to Lord Ganesha, the elephant-headed deity in Hinduism. "God ready" likely means you're preparing for
+          a festival or ceremony honoring him, such as Ganesh Chaturthi (also called Vinayaka Chaturthi in Tamil Nadu).
+        </p>
+        <p>
+          To get "ready," you might prepare puja items like flowers, incense, and sweets, set up a Ganpati idol made of clay, and
+          invite his blessings for wisdom and the removal of obstacles.
+        </p>
+        <button class="about-btn">Learn More</button>
+      </div>
+      <div class="about-image">
+        <img src="rama.jfif" alt="Shri Rama">
+      </div>
+    </div>
+    <br>
+  <hr>
+  <h3>Murugan</h3>
+    <div class="about-container">
+      <div class="about-text">
+        <p>
+        The phrase "Murugan god ready" most likely refers to a devotee's desire to worship or connect with Lord Murugan, a Hindu
+        deity known as the God of War, Victory, and Wisdom. This expression signifies a person's readiness to pray, offering
+        their devotion and trust to the deity for his blessings in overcoming difficulties and achieving success.
+        </p>
+        <p>
+        The readiness is often symbolized by performing rituals, chanting mantras, or attending festivals dedicated to Murugan,
+        such as Skanda Sashti.
+        </p>
+        <button class="about-btn">Learn More</button>
+      </div>
+      <div class="about-image">
+        <img src="murugan.jfif" alt="Murugan">
+      </div>
+    </div>
+    <br>
+  <hr>
+  <h3>Krishna</h3>
+    <div class="about-container">
+      <div class="about-text">
+        <p>
+          "Krishna god ready" is likely referring to preparing for the Hindu festival of Krishna Janmashtami, which celebrates the
+          birth of Lord Krishna.
+        </p>
+        <p>
+        It can also refer to getting ready to dress up as Krishna for a celebration, or preparing a space with Krishna-related decor.
+        <button class="about-btn">Learn More</button>
+      </div>
+      <div class="about-image">
+        <img src="krishna.jfif" alt="Krishna">
+      </div>
+    </div>
+    <br>
+  <hr>
+  <h3>Hanuman</h3>
+    <div class="about-container">
+      <div class="about-text">
+        <p>
+          The term "Hanuman god ready" likely refers to the depiction of Lord Hanuman in a ready or powerful stance, often seen in
+          artworks and statues, showcasing his strength, devotion, and readiness to act, such as protecting and serving Lord Rama.
+        </p>
+        <p>
+          The concept of Hanuman being "ready" reflects his character as a divine warrior and protector who embodies courage and
+          steadfast loyalty.
+        </p>
+        <button class="about-btn">Learn More</button>
+      </div>
+      <div class="about-image">
+        <img src="Hanuman, HARISH MOGER.jfif" alt="Hanuman">
+      </div>
+    </div>
+  </section>
+
+    <!-- Project Section -->
+  <section class="projects" id="projects">
+    <div class="projects-header">
+      <h2>Projects</h2>
+      <p>Explore some of our creative works and interactive web designs</p>
+    </div>
+
+    <div class="projects-container">
+      <div class="project-card">
+        <img src="coding.jfif" alt="Project 1">
+        <div class="project-info">
+          <h3>Coding</h3>
+          <p>HTML, CSS, and JavaScript are the foundational technologies for web development, working together to create interactive
+      and visually appealing websites.</p>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <img src="Github.jfif" alt="Project 2">
+        <div class="project-info">
+          <h3>Github</h3>
+          <p>Explore is your guide to finding your next project, catching up with what's trending, and connecting with the GitHub
+          community.</p>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <img src="linked.jfif" alt="Project 3">
+        <div class="project-info">
+          <h3>Linked</h3>
+          <p>The phrase "LinkedIn" is not an official product or feature of LinkedIn. However, it is a term used to describe
+          having a professional and polished profile that can be easily found by recruiters and hiring managers.</p>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <img src="managernment.jfif" alt="Project 4">
+        <div class="project-info">
+          <h3>Managernment</h3>
+          <p>The "Management" program refers to the PMI Project Management Ready™ certification, an entry-level credential
+          designed by the Project Management Institute (PMI).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Video Section -->
+  <section class="video" id="video">
+    <div class="video-header">
+      <h2>Watch Our Video</h2>
+      <p>Experience our creative work through this short demo video.</p>
+    </div>
+
+    <div class="video-container">
+      <!-- YouTube Embed -->
+      <iframe 
+        src="Raghunandana _ A Powerful Vandana Of Lord Ram By Hanuman Ji.mp4" 
+        title="All God Video"
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
+    <!-- Link Section -->
+  <section class="links" id="links">
+    <div class="links-header">
+      <h2>Links</h2>
+      <p>Find me on different platforms and explore my work.</p>
+    </div>
+
+    <div class="links-container">
+      <a href="https://github.com/sriram232001" target="_blank" class="link-btn">🐙 GitHub</a>
+      <a href="https://www.linkedin.com/in/sriram-balasubramaniyan-39253429a" target="_blank" class="link-btn">💼 LinkedIn</a>
+    </div>
+  </section>
+
+
+
+    <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="contact-header">
+      <h2>Contact Us</h2>
+      <p>We would love to hear from you! Get in touch for projects or collaborations.</p>
+    </div>
+
+    <div class="contact-container">
+      <!-- Contact Form -->
+      <form class="contact-form">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <h3>Get In Touch</h3>
+        <p><strong>Email:</strong> sidsriramdes@gmail.com</p>
+        <p><strong>Phone:</strong> +91 63811 25688</p>
+        <p><strong>Location:</strong> Mayilathudurai, India</p>
+        <div class="social-links">
+          <a href="#">🌐</a>
+          <a href="#">🐦</a>
+          <a href="#">📸</a>
+          <a href="#">💼</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+   <div class="footer-bottom">
+      <p>© 2025 Sriram Balasubramaniyan. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+
+
+
+  <script>
+    const images = [
+      "sivan.jfif",
+      "rama.jfif",
+      "murugan.jfif",
+      "krishna.jfif",
+      "Hanuman, HARISH MOGER.jfif"
+    ];
+
+    let index = 0;
+    const mainImage = document.getElementById("mainImage");
+
+    function changeImage(src) {
+      mainImage.src = src;
+      index = images.indexOf(src);
+    }
+
+    function nextImage() {
+      index = (index + 1) % images.length;
+      mainImage.src = images[index];
+    }
+
+    function prevImage() {
+      index = (index - 1 + images.length) % images.length;
+      mainImage.src = images[index];
+    }
+
+    // Auto play slider
+    setInterval(nextImage, 5000);
+
+      // Form Submission Simulation
+   const form = document.getElementById("contactForm");
+  const formMessage = document.getElementById("formMessage");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); // prevent page refresh
+    formMessage.style.display = "block";
+    formMessage.textContent = "Thank you! Your message has been sent.";
+    form.reset(); // clear form inputs
+  });
+   
+  </script>
+
+</body>
+</html>
